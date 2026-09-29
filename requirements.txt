@@ -1,0 +1,3 @@
+tldextract
+pandas
+openpyxl
