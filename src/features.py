@@ -1,34 +1,16 @@
 #This contains all the functions that can be used to extract
 #diffrent features out of a URL-link. 
 
-import urllib
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 import tldextract
 from ipaddress import ip_address
 import pandas as pd
 from datetime import datetime, timezone
 import requests
-
-
-# possible features:
-# URL length - ok
-# Domain length - ok
-# Number of dots - ok
-# Number of subdomains - ok
-# Number of hyphens - ok 
-# Number of @ symbols - ok 
-# Number of digits in URL - ok
-# IP address in URL (binary) 
-# HTTPS scheme (binary) 
-# Suspicious keyword count 
-# Punycode in domain (binary) (xn--) 
-# Domain age (days) -> WHOIS 
-# DNS record exists (binary) -> dns reslover 
-# Number of external links 
-# Number of password fields
-# page-rank
-# entropy of letters in link
-
+import socket
+from bs4 import BeautifulSoup
+from collections import Counter
+from math import log2
 
 keywords_df = pd.read_excel("data/phishing_keywords.xlsx")
 
@@ -45,7 +27,7 @@ def url_length(url: str) -> int:
 # Extracts the length of the domain out of URL
 def domain_length(url: str) -> int:
     parsed = urlparse(url)
-    domain = parsed.netloc
+    domain = parsed.hostname
     return len(domain)
 
 # Extracts number of dots out of URL
@@ -111,10 +93,13 @@ def has_punycode(url: str) -> bool:
     if domain is None:
         return False
 
-    return "xn--" in domain.lower()
+    return any(
+        label.startswith("xn--")
+        for label in domain.lower().split(".")
+    )
 
 
-# Extracts domain age in days using WHOIS
+# Extracts domain age in days using RDAP
 def domain_age(url: str) -> int:
     domain = urlparse(url).hostname
 
@@ -146,25 +131,73 @@ def domain_age(url: str) -> int:
         return -1
 
 # Checks if domain has a DNS record
-def dns_record_exists(url: str) -> int:
-    ...
+def dns_record_exists(url: str) -> bool:
+    domain = urlparse(url).hostname
+
+    if domain is None:
+        return False
+
+    try:
+        socket.gethostbyname(domain)
+        return True
+    except socket.gaierror:
+        return False
 
 
 # Extracts number of external links from URL
 def number_of_external_links(url: str) -> int:
-    ...
+    try:
+        response = requests.get(url, timeout=5)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        base_domain = urlparse(url).hostname
+        external_links = 0
+
+        for link in soup.find_all("a", href=True):
+            link_url = urljoin(url, link["href"])
+            link_domain = urlparse(link_url).hostname
+
+            if link_domain and link_domain != base_domain:
+                external_links += 1
+
+        return external_links
+
+    except requests.RequestException:
+        return 0
 
 
 # Extracts number of password fields from URL
 def number_of_password_fields(url: str) -> int:
-    ...
+    try:
+        response = requests.get(url, timeout=5)
+        soup = BeautifulSoup(response.text, "html.parser")
 
+        password_fields = soup.find_all(
+            "input",
+            {"type": "password"}
+        )
 
-# Extracts PageRank of URL
-def page_rank(url: str) -> float:
-    ...
+        return len(password_fields)
+
+    except requests.RequestException:
+        return 0
 
 
 # Calculates entropy of letters in URL
-def url_letter_entropy(url: str) -> float:
-    ...
+def url_path_entropy(url: str) -> float:
+    path = "".join(
+        char.lower()
+        for char in urlparse(url).path
+        if char.isalnum()
+    )
+
+    if not path:
+        return 0.0
+
+    frequencies = Counter(path)
+    length = len(path)
+
+    return -sum(
+        (count / length) * log2(count / length)
+        for count in frequencies.values()
+    )
