@@ -7,4 +7,8 @@ openpyxl
 bs4
 
 tqdm
+sklearn
+numpy
+joblib
+requests
 
