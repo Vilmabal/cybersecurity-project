@@ -7,7 +7,7 @@ openpyxl
 bs4
 
 tqdm
-sklearn
+scikit-learn
 numpy
 joblib
 requests
