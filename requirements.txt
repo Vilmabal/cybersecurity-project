@@ -6,4 +6,5 @@ pandas
 openpyxl
 bs4
 
+tqdm
 
