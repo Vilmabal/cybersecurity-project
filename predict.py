@@ -20,7 +20,7 @@ DATA_ROOT = PROJECT_ROOT / "data" / "processed"
 def predict(classifier: str = "random_forest") -> Path:
     X_test = np.load(DATA_ROOT / "X_test.npy")
     y_test = np.load(DATA_ROOT / "y_test.npy")
-    ids_test = np.load(DATA_ROOT / "ids_test.npy")
+    ids_test = np.load(DATA_ROOT / "ids_test.npy", allow_pickle=True)
 
     model_path = BASE_DIR / f"{classifier}_model.pkl"
     if not model_path.exists():
