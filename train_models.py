@@ -1,7 +1,5 @@
 """Train URL phishing classifiers."""
 
-from __future__ import annotations
-
 import argparse
 from pathlib import Path
 
@@ -13,39 +11,20 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+DATA_ROOT = Path("data/processed")
 
-BASE_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = BASE_DIR
-DATA_ROOT = PROJECT_ROOT / "data" / "processed"
-
-
-def build_pipeline(classifier: str) -> Pipeline:
+def build_pipeline(classifier):
     if classifier == "logreg":
-        estimator = LogisticRegression(
-            max_iter=2000,
-            C=1.0,
-            solver="lbfgs",
-            n_jobs=-1,
-            random_state=42,
-        )
-        return Pipeline([
-            ("scaler", StandardScaler()),
-            ("classifier", estimator),
-        ])
+        estimator = LogisticRegression(max_iter=2000, C=1.0, solver="lbfgs", n_jobs=-1, random_state=42)
+        return Pipeline([("scaler", StandardScaler()), ("classifier", estimator)])
     elif classifier == "random_forest":
-        estimator = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=None,
-            random_state=42,
-            n_jobs=-1,
-        )
+        estimator = RandomForestClassifier(n_estimators=100, max_depth=None, random_state=42, n_jobs=-1)
         return Pipeline([("classifier", estimator)])
     else:
-        raise ValueError(f"Unknown classifier: {classifier}")
+        raise ValueError(f"Unknown classifier, provide --logreg or keep empty for random forest classifier")
 
-
-def train(classifier: str = "random_forest") -> Path:
-    print(f"Loading training data from {DATA_ROOT}...")
+def train(classifier="random_forest"):
+    print(f"Loading training data from {DATA_ROOT}")
     X_train = np.load(DATA_ROOT / "X_train.npy")
     y_train = np.load(DATA_ROOT / "y_train.npy")
 
@@ -66,27 +45,13 @@ def train(classifier: str = "random_forest") -> Path:
         val_f1 = f1_score(y_val, val_preds, average="binary")
         print(f"Validation Accuracy: {val_acc:.4f} | Validation F1: {val_f1:.4f}")
 
-    output_path = BASE_DIR / f"{classifier}_model.pkl"
+    output_path = f"{classifier}_model.pkl"
     joblib.dump(model, output_path)
-    print(f"Saved model artifact: {output_path}")
-    return output_path
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train a phishing URL classifier.")
-    parser.add_argument(
-        "--classifier",
-        default="random_forest",
-        choices=["logreg", "random_forest"],
-        help="Classifier architecture to train.",
-    )
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
-    train(classifier=args.classifier)
-
+    print(f"Saved model: {output_path}")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--classifier", default="random_forest", choices=["logreg", "random_forest"])
+    args = parser.parse_args()
+    
+    train(classifier=args.classifier)
