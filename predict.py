@@ -1,6 +1,4 @@
-"""Predict test labels using a trained classifier and log inference times."""
-
-from __future__ import annotations
+"""Predicts test labels using a trained classifier and logs inference times."""
 
 import argparse
 import time
@@ -11,18 +9,14 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
+DATA_ROOT = Path("data/processed")
 
-BASE_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = BASE_DIR
-DATA_ROOT = PROJECT_ROOT / "data" / "processed"
-
-
-def predict(classifier: str = "random_forest") -> Path:
+def predict(classifier="random_forest"):
     X_test = np.load(DATA_ROOT / "X_test.npy")
     y_test = np.load(DATA_ROOT / "y_test.npy")
     ids_test = np.load(DATA_ROOT / "ids_test.npy", allow_pickle=True)
 
-    model_path = BASE_DIR / f"{classifier}_model.pkl"
+    model_path = Path(f"{classifier}_model.pkl")
     if not model_path.exists():
         raise FileNotFoundError(f"Model not found at {model_path}. Train it first.")
 
@@ -48,27 +42,13 @@ def predict(classifier: str = "random_forest") -> Path:
         }
     )
 
-    output_path = BASE_DIR / f"predictions_{classifier}.csv"
+    output_path = Path(f"predictions_{classifier}.csv")
     results.to_csv(output_path, index=False)
     print(f"Predictions saved to {output_path}")
-    return output_path
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run test inference.")
-    parser.add_argument(
-        "--classifier",
-        default="random_forest",
-        choices=["logreg", "random_forest"],
-        help="Trained model to use for inference.",
-    )
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
-    predict(classifier=args.classifier)
-
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--classifier", default="random_forest", choices=["logreg", "random_forest"])
+    args = parser.parse_args()
+    
+    predict(classifier=args.classifier)
