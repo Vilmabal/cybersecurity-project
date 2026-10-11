@@ -9,18 +9,53 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
-DATA_ROOT = Path("data/processed")
+BASE_DIR = Path.cwd()
+DATA_ROOT = BASE_DIR / "data" / "processed"
 
-def predict(classifier="random_forest"):
+LEGITIMATE_LABEL = 0
+PHISHING_LABEL = 1
+    
+
+def predict(classifier = "random_forest", n_repeats: int = 10):
+
+    if classifier not in {"logreg", "random_forest"}:
+        raise ValueError(f"Unknown classifier: {classifier}")
+    if n_repeats < 2:
+        raise ValueError("Use at least two permutation repeats.")
+    
+    X_train = np.load(DATA_ROOT / "X_train.npy")
     X_test = np.load(DATA_ROOT / "X_test.npy")
     y_test = np.load(DATA_ROOT / "y_test.npy")
     ids_test = np.load(DATA_ROOT / "ids_test.npy", allow_pickle=True)
+    feature_names = pd.read_csv(
+        DATA_ROOT / "feature_names.csv"
+    ).iloc[:, 0].tolist()
 
-    model_path = Path(f"{classifier}_model.pkl")
+    if len(y_test) == 0:
+        raise ValueError("Test set is empty.")
+    if y_test.ndim != 1 or ids_test.ndim != 1:
+        raise ValueError("Test labels and IDs must be one-dimensional.")
+    if len(X_test) != len(y_test) or len(ids_test) != len(y_test):
+        raise ValueError("Test features, labels, and IDs must have equal lengths.")
+    if X_train.ndim != 2 or X_test.ndim != 2 or len(X_train) == 0:
+        raise ValueError("Expected nonempty, two-dimensional feature matrices.")
+    if X_train.shape[1] != X_test.shape[1] or len(feature_names) != X_test.shape[1]:
+        raise ValueError("Feature matrices and feature names do not match.")
+    if not np.isfinite(X_train).all() or not np.isfinite(X_test).all():
+        raise ValueError("Feature matrices contain missing or infinite values.")
+    if not np.isin(y_test, [0, 1]).all():
+        raise ValueError("Expected numeric labels 0 and 1.")
+
+    model_path = BASE_DIR / f"{classifier}_model.pkl"
     if not model_path.exists():
         raise FileNotFoundError(f"Model not found at {model_path}. Train it first.")
 
     model = joblib.load(model_path)
+
+    if not np.array_equal(model.classes_, [0, 1]):
+        raise ValueError("Expected a model trained on both labels 0 and 1.")
+    if model.n_features_in_ != len(feature_names):
+        raise ValueError("Model and test data have different feature counts.")
 
     start = time.perf_counter()
     predictions = model.predict(X_test)
