@@ -55,6 +55,38 @@ def calculate_metrics(y_true, y_pred) -> dict:
         "false_positive_rate": fp / (fp + tn) if fp + tn else np.nan,
     }
 
+def print_summary(classifier, metrics, inference_time, per_sample_time):
+    model_name = {
+    "logreg": "Logistic regression",
+    "random_forest": "Random forest",
+    }[classifier]
+
+    print(f"\nTest evaluation: {model_name}")
+    print("-" * 48)
+
+    print(f"{'Number of Test URLs':<28} {metrics['num_samples']:>10,}")
+    print(f"{'Number of Legitimate URLs':<28} {metrics['num_legitimate']:>10,}")
+    print(f"{'Number of Phishing URLs':<28} {metrics['num_phishing']:>10,}")
+
+    print("\nClassification outcomes")
+    print(f"{'Phishing detected (TP)':<28} {metrics['true_positives']:>10,}")
+    print(f"{'False alarms (FP)':<28} {metrics['false_positives']:>10,}")
+    print(f"{'Legitimate accepted (TN)':<28} {metrics['true_negatives']:>10,}")
+    print(f"{'Phishing missed (FN)':<28} {metrics['false_negatives']:>10,}")
+    print("TP: True Positives, FP: False Positives, TN: True Negatives, FN: False Negatives")
+
+    print("\nPerformance")
+    print(f"{'Accuracy':<28} {metrics['accuracy']:>10.2%}")
+    print(f"{'Phishing precision':<28} {metrics['precision']:>10.2%}")
+    print(f"{'Phishing recall':<28} {metrics['recall']:>10.2%}")
+    print(f"{'Phishing F1':<28} {metrics['f1']:>10.4f}")
+    print(f"{'False-positive rate':<28} {metrics['false_positive_rate']:>10.2%}")
+
+    print("\nPrediction timing")
+    print(f"{'Total time':<28} {inference_time:>10.4f} s")
+    print(f"{'Average time per URL':<28} {per_sample_time * 1e6:>10.2f} µs")
+    print()
+
 def predict(classifier = "random_forest", n_repeats: int = 10):
 
     if classifier not in {"logreg", "random_forest"}:
@@ -108,7 +140,8 @@ def predict(classifier = "random_forest", n_repeats: int = 10):
         "inference_time_seconds": inference_time,
         "inference_time_per_sample_seconds": per_sample_time,
     }])
-    print(summary.to_string(index=False, float_format=lambda x: f"{x:.6f}"))
+
+    print_summary(classifier, metrics, inference_time, per_sample_time)
 
     results = pd.DataFrame(
         {
