@@ -7,14 +7,53 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    make_scorer,
+    precision_score,
+    recall_score,
+)
 
 BASE_DIR = Path.cwd()
 DATA_ROOT = BASE_DIR / "data" / "processed"
 
 LEGITIMATE_LABEL = 0
 PHISHING_LABEL = 1
+
+def calculate_metrics(y_true, y_pred) -> dict:
+    tn = fp = fn = tp = 0
+
+    for i in range(len(y_true)):
+        if y_true[i] == PHISHING_LABEL and y_true[i] == y_pred[i]:
+            tp += 1
+        elif y_true[i] == LEGITIMATE_LABEL and y_true[i] != y_pred[i]:
+            fp += 1
+        elif y_true[i] == PHISHING_LABEL and y_true[i] != y_pred[i]:
+            fn += 1
+        elif y_true[i] == LEGITIMATE_LABEL and y_true[i] == y_pred[i]:
+            tn += 1
     
+    return {
+        "num_samples": len(y_true),
+        "num_legitimate": int(tn + fp),
+        "num_phishing": int(tp + fn),
+        "true_positives": int(tp),
+        "false_positives": int(fp),
+        "true_negatives": int(tn),
+        "false_negatives": int(fn),
+        "accuracy": accuracy_score(y_true, y_pred),
+        "precision": precision_score(
+            y_true, y_pred, pos_label=PHISHING_LABEL, zero_division=0
+        ),
+        "recall": recall_score(
+            y_true, y_pred, pos_label=PHISHING_LABEL, zero_division=0
+        ),
+        "f1": f1_score(
+            y_true, y_pred, pos_label=PHISHING_LABEL, zero_division=0
+        ),
+        "false_positive_rate": fp / (fp + tn) if fp + tn else np.nan,
+    }
 
 def predict(classifier = "random_forest", n_repeats: int = 10):
 
@@ -62,9 +101,14 @@ def predict(classifier = "random_forest", n_repeats: int = 10):
     inference_time = time.perf_counter() - start
     per_sample_time = inference_time / len(y_test) if len(y_test) else 0.0
 
-    acc = accuracy_score(y_test, predictions)
-    print(f"Test Accuracy ({classifier}): {acc:.4f}")
-    print(f"Inference time: {inference_time:.4f}s total ({per_sample_time * 1e6:.2f} µs/sample)")
+    metrics = calculate_metrics(y_test, predictions)
+    summary = pd.DataFrame([{
+        "classifier": classifier,
+        **metrics,
+        "inference_time_seconds": inference_time,
+        "inference_time_per_sample_seconds": per_sample_time,
+    }])
+    print(summary.to_string(index=False, float_format=lambda x: f"{x:.6f}"))
 
     results = pd.DataFrame(
         {
