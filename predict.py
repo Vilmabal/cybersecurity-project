@@ -154,13 +154,35 @@ def predict(classifier = "random_forest", n_repeats: int = 10):
         }
     )
 
-    output_path = Path(f"predictions_{classifier}.csv")
-    results.to_csv(output_path, index=False)
-    print(f"Predictions saved to {output_path}")
+    results["outcome"] = np.select(
+        [
+            (y_test == 1) & (predictions == 1),
+            (y_test == 0) & (predictions == 1),
+            (y_test == 0) & (predictions == 0),
+        ],
+        ["TP", "FP", "TN"],
+        default="FN",
+    )
+
+    output_path = BASE_DIR / f"predictions_{classifier}.csv"
+    outputs = [
+        (results, output_path),
+        (summary, BASE_DIR / f"evaluation_{classifier}.csv"),
+    ]
+
+    for frame, path in outputs:
+        frame.to_csv(path, index=False)
+        print(f"Saved to {path}")
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--classifier", default="random_forest", choices=["logreg", "random_forest"])
+    parser.add_argument(
+        "--n-repeats",
+        type=int,
+        default=10,
+        help="Number of shuffles per feature for permutation importance.",
+    )
     args = parser.parse_args()
-    
-    predict(classifier=args.classifier)
+    predict(classifier=args.classifier, n_repeats=args.n_repeats)
