@@ -7,6 +7,7 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.inspection import permutation_importance
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -55,6 +56,54 @@ def calculate_metrics(y_true, y_pred) -> dict:
         "false_positive_rate": fp / (fp + tn) if fp + tn else np.nan,
     }
 
+def calculate_feature_importance(model, classifier, X_test, y_test, feature_names, n_repeats) -> pd.DataFrame:
+    if classifier == "logreg":
+        estimator = model.named_steps["classifier"]
+        weights = estimator.coef_[0]
+
+        return pd.DataFrame({
+            "feature": feature_names,
+            "weight": weights,
+            "absolute_weight": np.abs(weights),
+        }).sort_values("absolute_weight", ascending=False)
+
+    scorer = make_scorer(f1_score, pos_label=PHISHING_LABEL, zero_division=0)
+    importance = permutation_importance(model, X_test, y_test, scoring=scorer, n_repeats=n_repeats, random_state=42, n_jobs=1,)
+
+    return pd.DataFrame({
+        "feature": feature_names,
+        "mean_f1_decrease": importance.importances_mean,
+        "std_f1_decrease": importance.importances_std,
+        "n_repeats": n_repeats,
+    }).sort_values("mean_f1_decrease", ascending=False)
+
+
+def calculate_feature_groups(X_train, X_test, y_test, predictions, feature_names) -> pd.DataFrame:
+    binary_features = {"has_ip_address", "is_https", "has_punycode"}
+    rows = []
+
+    for column, feature in enumerate(feature_names):
+        threshold = (
+            0.5 if feature in binary_features
+            else float(np.median(X_train[:, column]))
+        )
+
+        for group, mask in [
+            ("at_or_below_threshold", X_test[:, column] <= threshold),
+            ("above_threshold", X_test[:, column] > threshold),
+        ]:
+            if not mask.any():
+                continue
+
+            rows.append({
+                "feature": feature,
+                "group": group,
+                "threshold": threshold,
+                **calculate_metrics(y_test[mask], predictions[mask]),
+            })
+
+    return pd.DataFrame(rows)
+
 def print_summary(classifier, metrics, inference_time, per_sample_time):
     model_name = {
     "logreg": "Logistic regression",
@@ -86,6 +135,132 @@ def print_summary(classifier, metrics, inference_time, per_sample_time):
     print(f"{'Total time':<28} {inference_time:>10.4f} s")
     print(f"{'Average time per URL':<28} {per_sample_time * 1e6:>10.2f} µs")
     print()
+
+def print_feature_importances(importances, classifier):
+    model_name = {
+        "logreg": "Logistic regression",
+        "random_forest": "Random forest",
+    }[classifier]
+
+    print(f"\nFeature importance: {model_name}")
+    print("-" * 64)
+
+    if classifier == "logreg":
+        display = importances[
+            ["feature", "weight", "absolute_weight"]
+        ].copy()
+
+        display.columns = ["Feature", "Weight", "Magnitude"]
+
+        print(display.to_string(
+            index=False,
+            float_format=lambda value: f"{value:.4f}",
+        ))
+
+        print("\nPositive weight: increasing the feature raises phishing probability.")
+        print("Negative weight: increasing it lowers phishing probability.")
+        print("These effects hold the other features fixed.")
+
+    else:
+        repeats = int(importances["n_repeats"].iloc[0])
+
+        display = importances[
+            ["feature", "mean_f1_decrease", "std_f1_decrease"]
+        ].copy()
+
+        display.columns = ["Feature", "Mean F1 drop", "SD"]
+
+        print(f"{repeats} shuffles per feature; larger F1 drops mean greater reliance.\n")
+
+        print(display.to_string(
+            index=False,
+            float_format=lambda value: f"{value:.5f}",
+        ))
+
+        print("\nSD: variation across shuffles.")
+        print("Near-zero values mean little measured effect on F1.")
+
+def print_feature_groups(groups, classifier):
+    model_name = {
+        "logreg": "Logistic regression",
+        "random_forest": "Random forest",
+    }[classifier]
+    print(f"\nFeature groups: {model_name}")
+    print("-" * 64)
+
+    binary_titles = {
+        "has_ip_address": "Uses an IP address",
+        "is_https": "Uses HTTPS",
+        "has_punycode": "Uses Punycode",
+    }
+
+    def percentage(value):
+        if pd.isna(value):
+            return "N/A"
+        return f"{value:.2%}"
+
+    print("\nPerformance by feature group")
+    print("Recall = phishing detected / actual phishing URLs.")
+    print("False-positive rate = false alarms / actual legitimate URLs.")
+    print("N/A means the metric has no valid denominator.")
+
+    for feature, feature_rows in groups.groupby("feature", sort=False):
+        title = binary_titles.get(
+            feature,
+            feature.replace("_", " ").capitalize(),
+        )
+
+        print(f"\n{title}")
+        print("-" * 64)
+
+        columns = {}
+
+        for _, row in feature_rows.iterrows():
+            lower_group = row["group"] == "at_or_below_threshold"
+
+            if feature in binary_titles:
+                group_label = "No" if lower_group else "Yes"
+            else:
+                threshold = float(row["threshold"])
+                threshold_text = (
+                    str(int(threshold))
+                    if threshold.is_integer()
+                    else str(threshold)
+                )
+                operator = "<=" if lower_group else ">"
+                group_label = f"{operator} {threshold_text}"
+
+            tp = int(row["true_positives"])
+            fp = int(row["false_positives"])
+            tn = int(row["true_negatives"])
+            fn = int(row["false_negatives"])
+
+            columns[group_label] = {
+                "Test URLs": f"{int(row['num_samples']):,}",
+                "Legitimate URLs": f"{int(row['num_legitimate']):,}",
+                "Phishing URLs": f"{int(row['num_phishing']):,}",
+                "Phishing detected (TP)": f"{tp:,}",
+                "False alarms (FP)": f"{fp:,}",
+                "Legitimate accepted (TN)": f"{tn:,}",
+                "Phishing missed (FN)": f"{fn:,}",
+                "Accuracy": percentage(row["accuracy"]),
+                "Phishing precision": (
+                    percentage(row["precision"]) if tp + fp else "N/A"
+                ),
+                "Phishing recall": (
+                    percentage(row["recall"]) if tp + fn else "N/A"
+                ),
+                "Phishing F1": (
+                    f"{row['f1']:.4f}" if 2 * tp + fp + fn else "N/A"
+                ),
+                "False-positive rate": (
+                    percentage(row["false_positive_rate"])
+                    if fp + tn else "N/A"
+                ),
+            }
+
+        display = pd.DataFrame(columns)
+        print(display.to_string())
 
 def predict(classifier = "random_forest", n_repeats: int = 10):
 
@@ -143,6 +318,12 @@ def predict(classifier = "random_forest", n_repeats: int = 10):
 
     print_summary(classifier, metrics, inference_time, per_sample_time)
 
+    importances = calculate_feature_importance(model, classifier, X_test, y_test, feature_names, n_repeats)
+    importances.insert(0, "classifier", classifier)
+
+    groups = calculate_feature_groups(X_train, X_test, y_test, predictions, feature_names)
+    groups.insert(0, "classifier", classifier)
+
     results = pd.DataFrame(
         {
             "classifier": classifier,
@@ -168,11 +349,16 @@ def predict(classifier = "random_forest", n_repeats: int = 10):
     outputs = [
         (results, output_path),
         (summary, BASE_DIR / f"evaluation_{classifier}.csv"),
+        (importances, BASE_DIR / f"feature_importances_{classifier}.csv"),
+        (groups, BASE_DIR / f"feature_groups_{classifier}.csv"),
     ]
 
     for frame, path in outputs:
         frame.to_csv(path, index=False)
         print(f"Saved to {path}")
+
+    print_feature_importances(importances, classifier)
+    print_feature_groups(groups, classifier)
     
 
 if __name__ == "__main__":
