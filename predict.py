@@ -163,15 +163,12 @@ def print_feature_importances(importances, classifier):
 
     else:
         repeats = int(importances["n_repeats"].iloc[0])
-
         display = importances[
             ["feature", "mean_f1_decrease", "std_f1_decrease"]
         ].copy()
-
         display.columns = ["Feature", "Mean F1 drop", "SD"]
 
         print(f"{repeats} shuffles per feature; larger F1 drops mean greater reliance.\n")
-
         print(display.to_string(
             index=False,
             float_format=lambda value: f"{value:.5f}",
