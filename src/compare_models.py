@@ -2,8 +2,8 @@ import pandas as pd
 
 comparison = pd.concat(
     [
-        pd.read_csv("evaluation_logreg.csv"),
-        pd.read_csv("evaluation_random_forest.csv"),
+        pd.read_csv("outputs/evaluation_logreg.csv"),
+        pd.read_csv("outputs/evaluation_random_forest.csv"),
     ],
     ignore_index=True,
 )

@@ -52,11 +52,10 @@ def extract_all_features(input_csv: Path, output_csv: Path) -> None:
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Extract features from URL dataset.")
-    parser.add_argument("--input-csv", type=Path, default=Path("full_dataset.csv"))
+    parser.add_argument("--input-csv", type=Path, default=Path("data/raw/full_dataset.csv"))
     parser.add_argument("--output-csv", type=Path, default=Path("data/processed/features.csv"))
     return parser.parse_args()
 
 if __name__ == "__main__":
     args = parse_args()
     extract_all_features(args.input_csv, args.output_csv)
-

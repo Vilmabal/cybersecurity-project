@@ -289,7 +289,7 @@ def predict(classifier = "random_forest", n_repeats: int = 10):
     if not np.isin(y_test, [0, 1]).all():
         raise ValueError("Expected numeric labels 0 and 1.")
 
-    model_path = BASE_DIR / f"{classifier}_model.pkl"
+    model_path = BASE_DIR / "models" / f"{classifier}_model.pkl"
     if not model_path.exists():
         raise FileNotFoundError(f"Model not found at {model_path}. Train it first.")
 
@@ -342,12 +342,13 @@ def predict(classifier = "random_forest", n_repeats: int = 10):
         default="FN",
     )
 
-    output_path = BASE_DIR / f"predictions_{classifier}.csv"
+    output_path = BASE_DIR / "outputs" / f"predictions_{classifier}.csv"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     outputs = [
         (results, output_path),
-        (summary, BASE_DIR / f"evaluation_{classifier}.csv"),
-        (importances, BASE_DIR / f"feature_importances_{classifier}.csv"),
-        (groups, BASE_DIR / f"feature_groups_{classifier}.csv"),
+        (summary, BASE_DIR / "outputs" / f"evaluation_{classifier}.csv"),
+        (importances, BASE_DIR / "outputs" / f"feature_importances_{classifier}.csv"),
+        (groups, BASE_DIR / "outputs" / f"feature_groups_{classifier}.csv"),
     ]
 
     for frame, path in outputs:

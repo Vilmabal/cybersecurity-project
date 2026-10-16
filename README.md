@@ -1,5 +1,19 @@
 # cybersecurity-project
 
+## Project structure
+
+```text
+data/
+  raw/         Original datasets
+  processed/   Extracted features and train/validation/test splits
+src/           Pipeline and model code
+tests/         Tests
+models/        Trained model files
+outputs/       Predictions and evaluation reports
+```
+
+Run the pipeline from the repository root with `python -m src.main`.
+
 ## Problem statement
 
 ## Reference
@@ -37,4 +51,3 @@ def print_feature_groups(groups, classifier):
 ## Documentation on testing the project
 
 ## Group members contributions
-

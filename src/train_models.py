@@ -12,6 +12,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 DATA_ROOT = Path("data/processed")
+MODEL_ROOT = Path("models")
 
 def build_pipeline(classifier):
     if classifier == "logreg":
@@ -45,7 +46,8 @@ def train(classifier="random_forest"):
         val_f1 = f1_score(y_val, val_preds, average="binary")
         print(f"Validation Accuracy: {val_acc:.4f} | Validation F1: {val_f1:.4f}")
 
-    output_path = f"{classifier}_model.pkl"
+    MODEL_ROOT.mkdir(parents=True, exist_ok=True)
+    output_path = MODEL_ROOT / f"{classifier}_model.pkl"
     joblib.dump(model, output_path)
     print(f"Saved model: {output_path}")
 

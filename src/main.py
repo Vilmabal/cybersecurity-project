@@ -25,25 +25,25 @@ def main():
         print("\nfeatures.csv already exists.")
     else:
         run_command(
-            [python_exec, "extract_features.py", "--input-csv", "full_dataset.csv"],
+            [python_exec, "src/extract_features.py", "--input-csv", "data/raw/full_dataset.csv"],
             "Extracting features from raw dataset"
         )
 
     #Data splits
     run_command(
-        [python_exec, "make_splits.py"],
+        [python_exec, "src/make_splits.py"],
         "Creating Train/Validation/Test splits"
     )
 
     #Training the model
     run_command(
-        [python_exec, "train_models.py", "--classifier", args.classifier],
+        [python_exec, "src/train_models.py", "--classifier", args.classifier],
         f"Training {args.classifier} model"
     )
 
     #Predicting and evaluating
     run_command(
-        [python_exec, "predict.py", "--classifier", args.classifier],
+        [python_exec, "src/predict.py", "--classifier", args.classifier],
         f"Step 4: Predicting test set with {args.classifier} model"
     )
     
