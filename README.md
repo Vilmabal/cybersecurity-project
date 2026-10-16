@@ -1,19 +1,5 @@
 # cybersecurity-project
 
-## Project structure
-
-```text
-data/
-  raw/         Original datasets
-  processed/   Extracted features and train/validation/test splits
-src/           Pipeline and model code
-tests/         Tests
-models/        Trained model files
-outputs/       Predictions and evaluation reports
-```
-
-Run the pipeline from the repository root with `python -m src/main.py`.
-
 ## Problem statement
 
 Phishing websites use deceptive URLs to trick people into visiting sites that may steal sensitive information. This project investigates whether machine learning can use characteristics of a URL to distinguish phishing URLs from legitimate ones.
@@ -31,6 +17,32 @@ To develop such a model, it is important to understand which features can help d
 4. Abu Zuraiq, A., & Alkasassbeh, M. (2019). Review: Phishing detection approaches. In *2019 2nd International Conference on New Trends in Computing Sciences (ICTCS)*. IEEE. (https://ieeexplore.ieee.org/abstract/document/8923069)
 
 ## Documentation of project
+
+### Project structure
+
+```text
+data/
+  raw/         Original datasets
+  processed/   Extracted features and train/validation/test splits
+src/           Pipeline and model code
+tests/         Tests
+models/        Trained model files
+outputs/       Predictions and evaluation reports
+```
+
+### Datasets
+
+### Features
+
+The project extracts URL characteristics and uses them as input for the phishing detection models. The current feature set includes URL and domain length, counts of dots, subdomains, hyphens, `@` symbols and digits, whether the URL uses HTTPS or an IP address, suspicious keywords and Punycode in the hostname, and the entropy of the URL path. These features are defined in `src/features.py` and applied to the dataset by `src/extract_features.py`.
+
+Additional functions measure domain age, DNS records, external links and password fields. They are implemented in `src/features.py` but are not part of the current extraction list; they require network access.
+
+
+### Models
+
+### Results
+
 
 ### predict.py
 
