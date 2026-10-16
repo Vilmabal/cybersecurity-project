@@ -16,8 +16,6 @@ Run the pipeline from the repository root with `python -m src/main.py`.
 
 ## Problem statement
 
-## Reference
-
 ## Documentation of project
 
 ### predict.py
@@ -59,3 +57,13 @@ I focused mainly on identifying and extracting useful features from URLs for our
 Then, in `features.py`, I implemented functions to extract these features. Some were straightforward, such as URL length and the number of dots, while others were more complex and required network requests and socket connections. These functions were used to transform URLs into data that the models could process.
 
 After training the models, I participated in discussions about the results and helped interpret them, including identifying which features appeared to be the most influential. I also helped improve the project’s documentation and reorganize its directory structure, making the project easier to understand and navigate.
+
+## References
+
+Safi, A., & Singh, S. (2023). A systematic literature review on phishing website detection techniques. *Journal of King Saud University - Computer and Information Sciences, 35*(2), 590–611. https://www.sciencedirect.com/science/article/pii/S1319157823000034
+
+Abu-Nimeh, S., Nappa, D., Wang, X., & Nair, S. (2007). A comparison of machine learning techniques for phishing detection. In *Proceedings of the Anti-Phishing Working Groups 2nd Annual eCrime Researchers Summit* (pp. 60–69). Association for Computing Machinery. https://dl.acm.org/doi/abs/10.1145/1299015.1299021
+
+Sahingoz, O. K., Buber, E., Demir, O., & Diri, B. (2019). Machine learning based phishing detection from URLs. *Expert Systems with Applications, 117*, 345–357. https://www.sciencedirect.com/science/article/pii/S0957417418306067
+
+Abu Zuraiq, A., & Alkasassbeh, M. (2019). Review: Phishing detection approaches. In *2019 2nd International Conference on New Trends in Computing Sciences (ICTCS)*. IEEE. https://ieeexplore.ieee.org/abstract/document/8923069
