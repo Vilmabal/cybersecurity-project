@@ -88,4 +88,4 @@ After training the models, I participated in discussions about the results and h
 
 AI (chatGPT) was used to improve the clarity and structure of this project documentation, for example by asking: “Make this alinea clearer and more suitable for a GitHub README.”
 
-TODO: report AI usage for code and put it in a folder as a seperate library!
+**TODO**: report AI usage for code and put it in a folder as a seperate library!
