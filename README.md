@@ -83,3 +83,9 @@ I focused mainly on identifying and extracting useful features from URLs for our
 Then, in `features.py`, I implemented functions to extract these features. Some were straightforward, such as URL length and the number of dots, while others were more complex and required network requests and socket connections. These functions were used to transform URLs into data that the models could process.
 
 After training the models, I participated in discussions about the results and helped interpret them, including identifying which features appeared to be the most influential. I also helped improve the project’s documentation and reorganize its directory structure, making the project easier to understand and navigate.
+
+## AI usage
+
+AI (chatGPT) was used to improve the clarity and structure of this project documentation, for example by asking: “Make this alinea clearer and more suitable for a GitHub README.”
+
+TODO: report AI usage for code and put it in a folder as a seperate library!
