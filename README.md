@@ -679,6 +679,8 @@ AI (chatGPT) was used to improve the clarity and structure of this project docum
 
 AI was used for for checking and questions regarding code syntax. 
 
+AI was used for code debugging.
+
 AI was used for and summaries of research and the interpretation of certain performance metrics. 
 
 AI was used to make the the two functions: print_feature_importances and print_feature_groups since these functions only purpose was to structure data in a readable way. 
