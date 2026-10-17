@@ -90,6 +90,7 @@ def print_feature_groups(groups, classifier):
 
 Test evaluation: Random forest
 ------------------------------------------------
+```
 Number of Test URLs              30,765
 Number of Legitimate URLs        15,383
 Number of Phishing URLs          15,382
@@ -99,9 +100,11 @@ Phishing detected (TP)           14,210
 False alarms (FP)                   906
 Legitimate accepted (TN)         14,477
 Phishing missed (FN)              1,172
+```
 TP: True Positives, FP: False Positives, TN: True Negatives, FN: False Negatives
 
 Performance
+```
 Accuracy                         93.25%
 Phishing precision               94.01%
 Phishing recall                  92.38%
@@ -111,11 +114,11 @@ False-positive rate               5.89%
 Prediction timing
 Total time                       0.0848 s
 Average time per URL               2.76 µs
-
+```
 Feature importance: Random forest
 ----------------------------------------------------------------
 10 shuffles per feature; larger F1 drops mean greater reliance.
-
+```
                  Feature       Mean F1 drop      SD
            domain_length       0.17935           0.00154
     number_of_subdomains       0.09162           0.00095
@@ -129,7 +132,7 @@ suspicious_keyword_count       0.00267           0.00028
     number_of_at_symbols       0.00161           0.00018
           has_ip_address       0.00000           0.00000
             has_punycode      -0.00001           0.00002
-
+```
 SD: variation across shuffles.
 Near-zero values mean little measured effect on F1.
 
@@ -143,6 +146,7 @@ N/A means the metric has no valid denominator.
 
 Url length
 ----------------------------------------------------------------
+```
                            <= 46    > 46
 Test URLs                 15,849  14,916
 Legitimate URLs            5,566   9,817
@@ -156,9 +160,11 @@ Phishing precision        92.63%  96.93%
 Phishing recall           92.46%  92.21%
 Phishing F1               0.9254  0.9451
 False-positive rate       13.60%   1.52%
+```
 
 Domain length
 ----------------------------------------------------------------
+```
                            <= 19    > 19
 Test URLs                 16,113  14,652
 Legitimate URLs            8,405   6,978
@@ -172,9 +178,10 @@ Phishing precision        96.46%  91.68%
 Phishing recall           92.03%  92.73%
 Phishing F1               0.9420  0.9220
 False-positive rate        3.09%   9.26%
-
+```
 Number of dots
 ----------------------------------------------------------------
+```
                             <= 2     > 2
 Test URLs                 20,318  10,447
 Legitimate URLs            7,353   8,030
@@ -188,9 +195,10 @@ Phishing precision        93.57%  96.55%
 Phishing recall           93.00%  89.04%
 Phishing F1               0.9328  0.9264
 False-positive rate       11.27%   0.96%
-
+```
 Number of subdomains
 ----------------------------------------------------------------
+```
                             <= 1     > 1
 Test URLs                 26,301   4,464
 Legitimate URLs           11,736   3,647
@@ -204,9 +212,10 @@ Phishing precision        93.82%  97.47%
 Phishing recall           92.53%  89.72%
 Phishing F1               0.9317  0.9344
 False-positive rate        7.56%   0.52%
-
+```
 Number of hyphens
 ----------------------------------------------------------------
+```
                             <= 0     > 0
 Test URLs                 17,082  13,683
 Legitimate URLs            9,183   6,200
@@ -220,9 +229,10 @@ Phishing precision        90.96%  97.18%
 Phishing recall           88.83%  96.12%
 Phishing F1               0.8989  0.9665
 False-positive rate        7.59%   3.37%
-
+```
 Number of at symbols
 ----------------------------------------------------------------
+```
                             <= 0      > 0
 Test URLs                 30,622      143
 Legitimate URLs           15,367       16
@@ -236,9 +246,10 @@ Phishing precision        93.98%   96.95%
 Phishing recall           92.32%  100.00%
 Phishing F1               0.9314   0.9845
 False-positive rate        5.87%   25.00%
-
+```
 Number of digits
 ----------------------------------------------------------------
+```
                             <= 1     > 1
 Test URLs                 16,240  14,525
 Legitimate URLs            8,244   7,139
@@ -252,9 +263,10 @@ Phishing precision        90.34%  98.00%
 Phishing recall           88.96%  96.09%
 Phishing F1               0.8964  0.9703
 False-positive rate        9.23%   2.03%
-
+```
 Uses an IP address
 ----------------------------------------------------------------
+```
                               No      Yes
 Test URLs                 30,744       21
 Legitimate URLs           15,383        0
@@ -268,9 +280,10 @@ Phishing precision        94.00%  100.00%
 Phishing recall           92.37%  100.00%
 Phishing F1               0.9318   1.0000
 False-positive rate        5.89%      N/A
-
+```
 Uses HTTPS
 ----------------------------------------------------------------
+```
                                No     Yes
 Test URLs                   1,362  29,403
 Legitimate URLs                 0  15,383
@@ -284,9 +297,11 @@ Phishing precision        100.00%  93.41%
 Phishing recall           100.00%  91.64%
 Phishing F1                1.0000  0.9252
 False-positive rate           N/A   5.89%
+```
 
 Suspicious keyword count
 ----------------------------------------------------------------
+```
                             <= 0     > 0
 Test URLs                 30,403     362
 Legitimate URLs           15,353      30
@@ -300,9 +315,10 @@ Phishing precision        93.90%  98.79%
 Phishing recall           92.25%  98.19%
 Phishing F1               0.9307  0.9849
 False-positive rate        5.88%  13.33%
-
+```
 Uses Punycode
 ----------------------------------------------------------------
+```
                               No      Yes
 Test URLs                 30,746       19
 Legitimate URLs           15,383        0
@@ -316,9 +332,10 @@ Phishing precision        94.00%  100.00%
 Phishing recall           92.38%   94.74%
 Phishing F1               0.9318   0.9730
 False-positive rate        5.89%      N/A
-
+```
 Url path entropy
 ----------------------------------------------------------------
+```
                          <= 2.9219281673431396 > 2.9219281673431396
 Test URLs                               15,362               15,403
 Legitimate URLs                          4,228               11,155
@@ -332,12 +349,13 @@ Phishing precision                      93.38%               95.78%
 Phishing recall                         93.75%               88.79%
 Phishing F1                             0.9356               0.9216
 False-positive rate                     17.50%                1.49%
-
+```
 
 ###Data from running **Logistic Regression** classifier
 
 Test evaluation: Logistic regression
 ------------------------------------------------
+```
 Number of Test URLs              30,765
 Number of Legitimate URLs        15,383
 Number of Phishing URLs          15,382
@@ -347,9 +365,11 @@ Phishing detected (TP)           12,346
 False alarms (FP)                 2,204
 Legitimate accepted (TN)         13,179
 Phishing missed (FN)              3,036
+```
 TP: True Positives, FP: False Positives, TN: True Negatives, FN: False Negatives
 
 Performance
+```
 Accuracy                         82.97%
 Phishing precision               84.85%
 Phishing recall                  80.26%
@@ -359,9 +379,10 @@ False-positive rate              14.33%
 Prediction timing
 Total time                       0.0033 s
 Average time per URL               0.11 µs
-
+```
 Feature importance: Logistic regression
 ----------------------------------------------------------------
+```
                  Feature  Weight  Magnitude
                 is_https -2.2448     2.2448
         number_of_digits  2.0348     2.0348
@@ -375,7 +396,7 @@ Feature importance: Logistic regression
 suspicious_keyword_count  0.3895     0.3895
             has_punycode  0.2423     0.2423
           has_ip_address  0.0926     0.0926
-
+```
 Positive weight: increasing the feature raises phishing probability.
 Negative weight: increasing it lowers phishing probability.
 These effects hold the other features fixed.
@@ -390,6 +411,7 @@ N/A means the metric has no valid denominator.
 
 Url length
 ----------------------------------------------------------------
+```
                            <= 46    > 46
 Test URLs                 15,849  14,916
 Legitimate URLs            5,566   9,817
@@ -403,9 +425,10 @@ Phishing precision        84.36%  86.01%
 Phishing recall           83.55%  73.64%
 Phishing F1               0.8395  0.7934
 False-positive rate       28.62%   6.22%
-
+```
 Domain length
 ----------------------------------------------------------------
+```
                            <= 19    > 19
 Test URLs                 16,113  14,652
 Legitimate URLs            8,405   6,978
@@ -419,9 +442,10 @@ Phishing precision        85.24%  84.49%
 Phishing recall           77.04%  83.50%
 Phishing F1               0.8093  0.8400
 False-positive rate       12.23%  16.85%
-
+```
 Number of dots
 ----------------------------------------------------------------
+```
                             <= 2     > 2
 Test URLs                 20,318  10,447
 Legitimate URLs            7,353   8,030
@@ -435,9 +459,10 @@ Phishing precision        84.55%  87.43%
 Phishing recall           84.92%  55.28%
 Phishing F1               0.8473  0.6773
 False-positive rate       27.36%   2.39%
-
+```
 Number of subdomains
 ----------------------------------------------------------------
+```
                             <= 1     > 1
 Test URLs                 26,301   4,464
 Legitimate URLs           11,736   3,647
@@ -451,9 +476,10 @@ Phishing precision        84.57%  96.75%
 Phishing recall           82.52%  40.02%
 Phishing F1               0.8353  0.5662
 False-positive rate       18.69%   0.30%
-
+```
 Number of hyphens
 ----------------------------------------------------------------
+```
                             <= 0     > 0
 Test URLs                 17,082  13,683
 Legitimate URLs            9,183   6,200
@@ -467,9 +493,10 @@ Phishing precision        77.17%  94.27%
 Phishing recall           78.25%  82.39%
 Phishing F1               0.7770  0.8793
 False-positive rate       19.92%   6.05%
-
+```
 Number of at symbols
 ----------------------------------------------------------------
+```
                             <= 0      > 0
 Test URLs                 30,622      143
 Legitimate URLs           15,367       16
@@ -483,9 +510,10 @@ Phishing precision        84.83%   87.79%
 Phishing recall           80.18%   90.55%
 Phishing F1               0.8244   0.8915
 False-positive rate       14.24%  100.00%
-
+```
 Number of digits
 ----------------------------------------------------------------
+```
                             <= 1     > 1
 Test URLs                 16,240  14,525
 Legitimate URLs            8,244   7,139
@@ -499,9 +527,10 @@ Phishing precision        80.99%  89.13%
 Phishing recall           77.43%  83.33%
 Phishing F1               0.7917  0.8613
 False-positive rate       17.62%  10.52%
-
+```
 Uses an IP address
 ----------------------------------------------------------------
+```
                               No      Yes
 Test URLs                 30,744       21
 Legitimate URLs           15,383        0
@@ -515,9 +544,10 @@ Phishing precision        84.83%  100.00%
 Phishing recall           80.24%  100.00%
 Phishing F1               0.8247   1.0000
 False-positive rate       14.33%      N/A
-
+```
 Uses HTTPS
 ----------------------------------------------------------------
+```
                                No     Yes
 Test URLs                   1,362  29,403
 Legitimate URLs                 0  15,383
@@ -531,9 +561,10 @@ Phishing precision        100.00%  83.29%
 Phishing recall           100.00%  78.35%
 Phishing F1                1.0000  0.8074
 False-positive rate           N/A  14.33%
-
+```
 Suspicious keyword count
 ----------------------------------------------------------------
+```
                             <= 0     > 0
 Test URLs                 30,403     362
 Legitimate URLs           15,353      30
@@ -547,9 +578,10 @@ Phishing precision        84.55%  97.61%
 Phishing recall           79.86%  98.49%
 Phishing F1               0.8214  0.9805
 False-positive rate       14.30%  26.67%
-
+```
 Uses Punycode
 ----------------------------------------------------------------
+```
                               No      Yes
 Test URLs                 30,746       19
 Legitimate URLs           15,383        0
@@ -563,9 +595,10 @@ Phishing precision        84.83%  100.00%
 Phishing recall           80.24%  100.00%
 Phishing F1               0.8247   1.0000
 False-positive rate       14.33%      N/A
-
+```
 Url path entropy
 ----------------------------------------------------------------
+```
                          <= 2.9219281673431396 > 2.9219281673431396
 Test URLs                               15,362               15,403
 Legitimate URLs                          4,228               11,155
@@ -579,6 +612,15 @@ Phishing precision                      84.60%               85.71%
 Phishing recall                         85.78%               65.80%
 Phishing F1                             0.8519               0.7444
 False-positive rate                     41.11%                4.18%
+```
+
+Summary of raw data between the two classifiers:
+```
+classifier               true_positives    false_positives  false_negatives  precision   recall       f1          false_positive_rate
+logreg                   12346             2204             3036             0.848522    0.802626     0.824937    0.143275
+random_forest            14210             906              1172             0.940064    0.923807     0.931864    0.058896
+```
+We can from this data and these metrics determine that the Random Forest classifier is the superior model (on this data) with an approximate 10 percentage point difference in precision, recall and f1 score. 
 
 ## Documentation on testing the project
 
