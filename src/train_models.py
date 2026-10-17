@@ -11,8 +11,9 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-DATA_ROOT = Path("data/processed")
-MODEL_ROOT = Path("models")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_ROOT = PROJECT_ROOT/"data"/"processed"
+MODEL_ROOT = PROJECT_ROOT/"models"
 
 def build_pipeline(classifier):
     if classifier == "logreg":

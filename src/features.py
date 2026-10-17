@@ -11,8 +11,14 @@ import socket
 from bs4 import BeautifulSoup
 from collections import Counter
 from math import log2
+from pathlib import Path
 
-keywords_df = pd.read_excel("data/phishing_keywords.xlsx")
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+KEYWORDS_FILE = PROJECT_ROOT/"data"/"phishing_keywords.xlsx"
+
+keywords_df = pd.read_excel(KEYWORDS_FILE)
+
 
 SUSPICIOUS_KEYWORDS = set(
     keywords_df["Evilginx Hostnames"]

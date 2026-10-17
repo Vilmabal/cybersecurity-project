@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-DATA_ROOT = Path("data/processed")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_ROOT = PROJECT_ROOT/"data"/"processed"
 
 def make_splits(test_size: float = 0.2, val_size: float = 0.1, random_state: int = 42):
     input_path = DATA_ROOT / "features.csv"

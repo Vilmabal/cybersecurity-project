@@ -4,9 +4,9 @@ import argparse
 from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
+import features
 
-
-from src import features
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 def extract_all_features(input_csv: Path, output_csv: Path) -> None:
     print(f"Reading {input_csv}...")
@@ -52,8 +52,8 @@ def extract_all_features(input_csv: Path, output_csv: Path) -> None:
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Extract features from URL dataset.")
-    parser.add_argument("--input-csv", type=Path, default=Path("data/raw/full_dataset.csv"))
-    parser.add_argument("--output-csv", type=Path, default=Path("data/processed/features.csv"))
+    parser.add_argument("--input-csv", type=Path, default=PROJECT_ROOT /"data"/"raw"/"full_dataset.csv")
+    parser.add_argument("--output-csv", type=Path, default=PROJECT_ROOT/"data"/"processed"/"features.csv")
     return parser.parse_args()
 
 if __name__ == "__main__":
