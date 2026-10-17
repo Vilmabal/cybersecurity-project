@@ -84,6 +84,16 @@ Then, in `features.py`, I implemented functions to extract these features. Some 
 
 After training the models, I participated in discussions about the results and helped interpret them, including identifying which features appeared to be the most influential. I also helped improve the project’s documentation and reorganize its directory structure, making the project easier to understand and navigate.
 
+### Alexander Granlund
+
+I participated in group discussions and meetings throughout the project, contributing ideas about its design and implementation. My main responsibility was developing the evaluation functionality to support a fair comparison of the two classifiers.
+
+I collaborated with the group to identify useful evaluation metrics, then researched their meaning, purpose, calculation, and interpretation. Based on this work, I implemented three functions to calculate classification metrics, assess feature importance, and evaluate classifier performance across groups of URLs with different feature characteristics. I also added input validation and error handling to the prediction function to improve the robustness of the evaluation process.
+
+To make the results easier to interpret, I developed dedicated output functions that presented the metrics, feature importances, and feature group results in readable tables. This made it easier to identify patterns and compare performance than using the raw output alone.
+
+Finally, I created ```compare_models.py```, a small Python script that displays selected evaluation metrics from both classifiers together to support direct comparison.
+
 ## AI usage
 
 AI (chatGPT) was used to improve the clarity and structure of this project documentation, for example by asking: “Make this alinea clearer and more suitable for a GitHub README.”
