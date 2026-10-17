@@ -626,21 +626,22 @@ We can from this data and these metrics determine that the Random Forest classif
 
 To try out and run the project only the main.py program has to be run. Only one classifier can be run at a time. When the main.py program runs the collected URLs are split into three groups: training, validation and testing. Then the program trains the chosen classifier on the training data and validates with the validation data. The program then predicts the nature of the URLs in the testing data (phishing or legitimate) and after these predictions have been made the evaluation functions are run to calculate and display the performance of the chosen classifier. 
 
+The program should be run from the root project directory to not encounter any program path logic errors. Therefore use src/file.py.
 ```
-python3 main.py
+python3 src/main.py
 ```
 Runs the program on default values, that is classifier = random forest and number of repeats = 10.
 
 To specify model, use the --classifier <classifier> argument. (To choose logistic regression, use arg "logreg"
 
 ```
-python3 main.py --classifier logreg
+python3 src/main.py --classifier logreg
 ```
 
 To specify number of repeats for the feature importance shuffle when running the random forest classifier, use the --n-repeats <n-repeats> argument. 
 
 ```
-python main.py --classifier random_forest n-repeats 30
+python src/main.py --classifier random_forest n-repeats 30
 ```
 This then changes the number of repeats (each feature shuffle) from the default 10 to 30.
 
