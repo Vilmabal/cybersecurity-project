@@ -16,7 +16,7 @@ MODEL_ROOT = Path("models")
 
 def build_pipeline(classifier):
     if classifier == "logreg":
-        estimator = LogisticRegression(max_iter=2000, C=1.0, solver="lbfgs", n_jobs=-1, random_state=42)
+        estimator = LogisticRegression(max_iter=2000, C=1.0, solver="lbfgs", random_state=42)
         return Pipeline([("scaler", StandardScaler()), ("classifier", estimator)])
     elif classifier == "random_forest":
         estimator = RandomForestClassifier(n_estimators=100, max_depth=None, random_state=42, n_jobs=-1)

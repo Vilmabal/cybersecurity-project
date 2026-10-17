@@ -41,7 +41,16 @@ Additional functions measure domain age, DNS records, external links and passwor
 
 ### Models
 
+2 machine learning algorithms were evaluated to compare a linear baseline against a non-linear model:
+
+1. Logistic regression: This serves as a more interpretable baseline to evaluate linear separability of the extracted URL features and is built using "StandardScaler" to normalize features prior to model fitting since it's essential because of our different scaling features (e.g. URL length vs binary flags). It is oprimized using the lbfgs solver with L2 regularization (C=1). To ensure the optimization algorithm fully converges, the maximum iterations were increased from the default 100 to 2000 and convergence iterations are logged during training. 
+
+2. Random forest classifier: An ensemble of 100 decision trees designed to capture non-linear relationships among URL features. Unlike logistic regression, it does not need feature normalization. The model is trained with unrestricted tree depth (max_depth=None) for each tree to learn detailed patterns. 
+
+For the data splitting, stratified partitioning was used to ensure identical ratios of legitimate and phishing URL's across all subsets which consisted of: Train (70%), validation (10%) and test (20%) sets. Feature matrices, labels, URL identifiers and column names are saved to `data/processed/` for evaluation and error inspection. Both models are trained with a fixed random seed for reproducibility and random forest runs in parallel (`n_jobs=-1`) to accelerate training. After fitting on the training set, intermediate validation performance is also monitored, using accuracy and F1-score to verify convergence. The models are then saved to `models/*.pkl` using `joblib`.
+
 ### Results
+
 
 
 ### predict.py
@@ -93,6 +102,14 @@ I collaborated with the group to identify useful evaluation metrics, then resear
 To make the results easier to interpret, I developed dedicated output functions that presented the metrics, feature importances, and feature group results in readable tables. This made it easier to identify patterns and compare performance than using the raw output alone.
 
 Finally, I created ```compare_models.py```, a small Python script that displays selected evaluation metrics from both classifiers together to support direct comparison.
+
+### Vilma Balicevac
+
+My responsibilities were implementing the data splits, the model training and the main file which runs the whole pipeline. I created the partitioning of the processed feature data into training, validation and testing and applied stratified sampling across them. I also ensured the URL identifiers and feature names were preserved to support analysis later on.  
+
+I also implemented the training pipeline for the classifiers. For logistic regression, I constructed a scikit-learn `Pipeline` integrating `StandardScaler` to ensure numerical stability and proper convergence with the lbfgs solver. For random forest, I implemented an ensemble of 100 trees. I added automated validation checks for monitoring the model fit for both models. 
+
+To bring all stages together, I implemented `src/main.py` as the end-to-end command-line runner where i added argument parsing  (`--classifier`) to easily switch between models when running, input caching to avoid redundant feature extraction, and error handling. 
 
 ## AI usage
 

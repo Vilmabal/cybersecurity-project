@@ -44,7 +44,7 @@ def main():
     #Predicting and evaluating
     run_command(
         [python_exec, "src/predict.py", "--classifier", args.classifier],
-        f"Step 4: Predicting test set with {args.classifier} model"
+        f"Predicting test set with {args.classifier} model"
     )
     
     print("Finished!")
