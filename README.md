@@ -644,7 +644,7 @@ python3 src/main.py
 ```
 Runs the program on default values, that is classifier = random forest and number of repeats = 10.
 
-To specify model, use the --classifier <classifier> argument. (To choose logistic regression, use arg "logreg"
+To specify model, use the --classifier <classifier> argument. (To choose logistic regression, use arg "logreg")
 
 ```
 python3 src/main.py --classifier logreg
@@ -653,7 +653,7 @@ python3 src/main.py --classifier logreg
 To specify number of repeats for the feature importance shuffle when running the random forest classifier, use the --n-repeats <n-repeats> argument. 
 
 ```
-python src/main.py --classifier random_forest n-repeats 30
+python src/main.py --classifier random_forest --n-repeats 30
 ```
 This then changes the number of repeats (each feature shuffle) from the default 10 to 30.
 
@@ -706,6 +706,3 @@ AI was used for code debugging.
 AI was used for and summaries of research and the interpretation of certain performance metrics. 
 
 AI was used to make the the two functions: print_feature_importances and print_feature_groups since these functions only purpose was to structure data in a readable way. 
-
-
-**TODO**: report AI usage for code and put it in a folder as a seperate library!
