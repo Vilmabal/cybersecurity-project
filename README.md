@@ -16,6 +16,10 @@ To develop such a model, it is important to understand which features can help d
 
 4. Abu Zuraiq, A., & Alkasassbeh, M. (2019). Review: Phishing detection approaches. In *2019 2nd International Conference on New Trends in Computing Sciences (ICTCS)*. IEEE. (https://ieeexplore.ieee.org/abstract/document/8923069)
 
+5.Kaitholikkal, J. K. S., & Arthi, B. (2024). Phishing URL dataset (Version 1). (https://www.phishtank.com/developer_info.php)
+
+6.Cisco Talos Intelligence Group. (2026). PhishTank Developer Information: Verified Online Phish Feed. (https://data.mendeley.com/datasets/vfszbj9b36/1)
+
 ## Documentation of project
 
 ### Project structure
@@ -31,6 +35,12 @@ outputs/       Predictions and evaluation reports
 ```
 
 ### Datasets
+
+The dataset used in this project contains a balanced distribution of 153,822 total URLs, split equally between malicious and benign. Each URL is labelled either 0 if legitimate or 1 if phishing. The malicious URLs are extracted directly from the PhishTank dataset, and the benign URLs are extracted from the Phishing URL dataset (Kaitholikkal & Arthi, 2024). 
+
+Because the source benign dataset contained a much larger number of 345,738 legitimate entries, a random probability filter was applied, with p=0.226, via a Rainbow Query Language (RBQL) expression (`Math.random() < 0.226 LIMIT 76911`). This extracted roughly 22.6% of the given database, before hitting the capping threshold.
+
+To construct the final unified dataset, both components were merged using an Excel spreadsheet. The stacked data blocks were completely randomized and shuffled using a dummy calculation field populated by the =RAND() function, sorting the data frames from smallest to largest value, and subsequently discarding the generator column.
 
 ### Features
 
@@ -673,6 +683,14 @@ My responsibilities were implementing the data splits, the model training and th
 I also implemented the training pipeline for the classifiers. For logistic regression, I constructed a scikit-learn `Pipeline` integrating `StandardScaler` to ensure numerical stability and proper convergence with the lbfgs solver. For random forest, I implemented an ensemble of 100 trees. I added automated validation checks for monitoring the model fit for both models. 
 
 To bring all stages together, I implemented `src/main.py` as the end-to-end command-line runner where i added argument parsing  (`--classifier`) to easily switch between models when running, input caching to avoid redundant feature extraction, and error handling. 
+
+###Cecilia Leotta
+My primary responsibility for this project focused on data acquisition and dataset standardization to ensure a balanced, binary-labeled input for the classifiers. While the phishing URLs were extracted directly from the PhishTank database, sourcing legitimate URLs required utilizing the Phishing URL Dataset (Kaitholikkal & Arthi, 2024). Due to the structural complexity of mapping safe internet traffic, a public repository of benign URLs similar to PhishTank doesn’t exist. The Phishing URL dataset is also used in multiple peer reviewed studies, which makes it the optimal choice for this project.
+
+To handle the significantly larger size of the benign dataset, I applied a random probability filter to maintain a proportional and unbiased sample size. I then merged the two distinct data streams and randomized the final sequence using a spreadsheet-based calculation field populated by the =RAND() function to eliminate any positional bias.
+
+Finally, I utilized Excel to design and generate the descriptive statistical visualizations and data distribution graphs for our final presentation slides.
+
 
 ## AI usage
 
