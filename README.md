@@ -98,7 +98,7 @@ This function prints a summary of the metrics provided by calcualte_feature_grou
 def print_feature_groups(groups, classifier):
 ```
 
-###Data from running **Random Forest** classifier (with default value of 10 repeats for feature importance)
+### Data from running **Random Forest** classifier (with default value of 10 repeats for feature importance)
 
 Test evaluation: Random forest
 ------------------------------------------------
@@ -363,7 +363,7 @@ Phishing F1                             0.9356               0.9216
 False-positive rate                     17.50%                1.49%
 ```
 
-###Data from running **Logistic Regression** classifier
+### Data from running **Logistic Regression** classifier
 
 Test evaluation: Logistic regression
 ------------------------------------------------
