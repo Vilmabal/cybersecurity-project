@@ -684,7 +684,7 @@ I also implemented the training pipeline for the classifiers. For logistic regre
 
 To bring all stages together, I implemented `src/main.py` as the end-to-end command-line runner where i added argument parsing  (`--classifier`) to easily switch between models when running, input caching to avoid redundant feature extraction, and error handling. 
 
-###Cecilia Leotta
+### Cecilia Leotta
 
 My primary responsibility for this project focused on data acquisition and dataset standardization to ensure a balanced, binary-labeled input for the classifiers. While the phishing URLs were extracted directly from the PhishTank database, sourcing legitimate URLs required utilizing the Phishing URL Dataset (Kaitholikkal & Arthi, 2024). Due to the structural complexity of mapping safe internet traffic, a public repository of benign URLs similar to PhishTank doesn’t exist. The Phishing URL dataset is also used in multiple peer reviewed studies, which makes it the optimal choice for this project.
 
