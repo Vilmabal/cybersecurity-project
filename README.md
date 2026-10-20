@@ -16,9 +16,9 @@ To develop such a model, it is important to understand which features can help d
 
 4. Abu Zuraiq, A., & Alkasassbeh, M. (2019). Review: Phishing detection approaches. In *2019 2nd International Conference on New Trends in Computing Sciences (ICTCS)*. IEEE. (https://ieeexplore.ieee.org/abstract/document/8923069)
 
-5.Kaitholikkal, J. K. S., & Arthi, B. (2024). Phishing URL dataset (Version 1). (https://www.phishtank.com/developer_info.php)
+5. Kaitholikkal, J. K. S., & Arthi, B. (2024). Phishing URL dataset (Version 1). (https://www.phishtank.com/developer_info.php)
 
-6.Cisco Talos Intelligence Group. (2026). PhishTank Developer Information: Verified Online Phish Feed. (https://data.mendeley.com/datasets/vfszbj9b36/1)
+6. Cisco Talos Intelligence Group. (2026). PhishTank Developer Information: Verified Online Phish Feed. (https://data.mendeley.com/datasets/vfszbj9b36/1)
 
 ## Documentation of project
 
